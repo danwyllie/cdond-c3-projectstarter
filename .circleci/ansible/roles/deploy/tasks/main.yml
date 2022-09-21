@@ -1,0 +1,44 @@
+---
+- name: "update apt package"
+  become: yes
+  apt:
+    update_cache: yes
+
+- name: "install python"
+  become: yes
+  apt:
+    name: ["python3"]
+    state: latest
+    update_cache: yes
+
+- name: "upgrade all packages"
+  become: yes
+  apt:
+    upgrade: yes
+
+- name: "install dependencies - nodejs & npm"
+  become: yes
+  apt:
+    name: ["nodejs","npm"]
+    state: latest
+    update_cache: yes
+
+- name: "install pm2"
+  become: yes
+  npm:
+    name: pm2
+    global: yes
+    production: yes
+    state: present
+
+- name: "Extract zipped artifact file(s)"
+  become: yes
+  unarchive:
+    src: artifact.tar.gz
+    dest: .
+
+- name: "Startup the app"
+  become: yes
+  shell: |
+    pm2 stop default
+    pm2 start npm -- start
