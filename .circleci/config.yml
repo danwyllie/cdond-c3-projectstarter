@@ -179,7 +179,7 @@ jobs:
     docker:
       #- image: circleci/node:13.8.0
       #- image: python:3.11-rc-alpine
-      - image: cimg/node:16.13.1
+      - image: circleci/node:16.13.1
     steps:
       - checkout
       # Adding AWSCLI because of failures running destroy environment
