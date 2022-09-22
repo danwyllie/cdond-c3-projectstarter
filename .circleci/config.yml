@@ -177,14 +177,21 @@ jobs:
 
   run-migrations:
     docker:
-      - image: circleci/node:13.8.0
+      #- image: circleci/node:13.8.0
+      - image: python:3.11-rc-alpine
     steps:
       - checkout
+      # Adding AWSCLI because of failures running destroy environment
+      - run:
+          name: "Install depenencies - AWSCLI"  
+          command: |
+            pip install awscli      
       - run:
           name: "Run migrations"
           command: |
             cd backend
             npm install
+            npm audit fix --audit-level=critical --force
             npm run migrations > migrations_dump.txt
       - run:
           name: "Send migration result to kvdb"
