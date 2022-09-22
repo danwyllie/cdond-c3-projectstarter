@@ -185,7 +185,9 @@ jobs:
       - run:
           name: "Install depenencies - AWSCLI"  
           command: |
-            pip install awscli      
+            pip install awscli
+      - restore_cache:
+          keys: [backend-build]  
       - run:
           name: "Run migrations"
           command: |
