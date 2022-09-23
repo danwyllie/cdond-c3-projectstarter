@@ -183,12 +183,12 @@ jobs:
     steps:
       - checkout
       # Adding AWSCLI because of failures running destroy environment
-      - run:
-          name: "Install depenencies - AWSCLI"  
+      #- run:
+      #    name: "Install depenencies - AWSCLI"  
           #command: |
           #  pip install awscli
-          command: |
-            apk add --update aws-cli npm
+      #    command: |
+      #      apk add --update aws-cli npm
       - restore_cache:
           keys: [backend-build]  
       - run:
