@@ -177,8 +177,8 @@ jobs:
 
   run-migrations:
     docker:
-      #- image: circleci/node:13.8.0
-      - image: python:3.11-rc-alpine
+      - image: circleci/node:13.8.0
+      #- image: python:3.11-rc-alpine
       #- image: cimg/node:16.13.1
     steps:
       - checkout
