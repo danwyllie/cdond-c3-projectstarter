@@ -182,7 +182,7 @@ jobs:
       #- image: cimg/node:16.13.1
     steps:
       - checkout
-      # Adding AWSCLI because of failures running destroy environment #
+      # Adding AWSCLI because of failures running destroy environment
       #- run:
       #    name: "Install depenencies - AWSCLI"  
           #command: |
