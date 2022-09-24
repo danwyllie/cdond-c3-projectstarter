@@ -203,11 +203,11 @@ jobs:
             cd backend
             npm install
             npm run migrations > migrations_dump.txt
-      - run:
-          name: "Check migration and fix curl issue"
-          command: |
-            cd backend
-            cat migrations_dump.txt | grep "has been executed successfully"
+#      - run:
+#          name: "Check migration and fix curl issue"
+#          command: |
+#            cd backend
+#            cat migrations_dump.txt | grep "has been executed successfully"
       - run:
           name: "Send migration result to kvdb"
           command: |
