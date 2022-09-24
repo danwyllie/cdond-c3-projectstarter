@@ -213,9 +213,9 @@ jobs:
               echo "1" > ~/project/backend/migrationresults.txt
             fi
       - persist_to_workspace:
-          root: .
+          root: ~/
           paths:
-            - migrationresults.txt
+            - project/backend/migrationresults.txt
 #      - run:
 #          name: "Check migration and fix curl issue"
 #          command: |
