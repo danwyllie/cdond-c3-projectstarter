@@ -15,8 +15,11 @@ commands:
           when: << parameters.when_to_run >>
           command: |
             aws s3 rm "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
-            aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflowid>> --region ${AWS_DEFAULT_REGION}
             aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflowid>> --region ${AWS_DEFAULT_REGION}
+# Disabling auto delete of ec2 server to help troubleshooting
+#            aws s3 rm "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
+#            aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflowid>> --region ${AWS_DEFAULT_REGION}
+#            aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflowid>> --region ${AWS_DEFAULT_REGION}
 
 jobs:
   build-frontend:
@@ -308,8 +311,8 @@ jobs:
             npm i
             npm run build
             cd ..
-            tar -C backend -czvf artifact.tar.gz .
-            mv artifact.tar.gz .circleci/ansible/roles/deploy/files
+            tar -czvf artifact.tar.gz backend
+            cp artifact.tar.gz .circleci/ansible/roles/deploy/files
             cd .circleci/ansible
             echo "Contents of inventory.txt:"
             cat inventory.txt
