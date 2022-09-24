@@ -197,11 +197,11 @@ jobs:
             cd backend
             npm install
             npm run migrations > migrations_dump.txt
-      # grep to console to visually confirm because curl not working
             grep "has been executed successfully" ~/project/backend/migrations_dump.txt
+            echo "insecure" >> ~/.curlrc
+      # grep to console to visually confirm because curl not working
       # curl -k used because of "SSL Certificate problem: certificate has expired" message
       # Trying to ensure curl works
-            echo "insecure" >> ~/.curlrc
       - run:
           name: "Send migration result to kvdb"
           command: |
