@@ -187,7 +187,9 @@ jobs:
           name: "Install dependencies"  
           command: |
             pip install awscli
-            pip install python
+            apk update
+            apk upgrade
+            apk add nodejs nodejs-npm
 #      - run:
 #          name: "Install dependencies"
 #          command: |
