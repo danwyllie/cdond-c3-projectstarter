@@ -31,16 +31,21 @@
     production: yes
     state: present
 
+- name: "create backend folder on ec2 instance"
+  file:
+    path: /home/ubuntu/backend
+    state: directory
+
 - name: "copy artifact file to ec2 instance"
   become: yes
   copy:
     src: artifact.tar.gz
-    dest: /home/ubuntu/
+    dest: /home/ubuntu
 
 - name: "Extract tar file on ec2 instance"
   ansible.builtin.unarchive:
     src: artifact.tar.gz
-    dest: /home/ubuntu/backend/
+    dest: /home/ubuntu/backend
 
 #- name: "Extract zipped artifact file(s)"
 #  become: yes
