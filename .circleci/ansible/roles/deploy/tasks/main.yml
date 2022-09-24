@@ -38,7 +38,7 @@
 
 - name: "copy artifact file to ec2 instance"
   copy:
-    src: artifact.tar.gz
+    src: /root/project/.circleci/artifact.tar.gz
     dest: /home/ubuntu
 
 - name: "Extract tar file on ec2 instance"
