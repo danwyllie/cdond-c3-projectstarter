@@ -190,6 +190,7 @@ jobs:
             apk update
             apk upgrade
             apk add nodejs
+            apk add npm
 #      - run:
 #          name: "Install dependencies"
 #          command: |
