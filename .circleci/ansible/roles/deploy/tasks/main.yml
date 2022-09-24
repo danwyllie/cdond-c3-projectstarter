@@ -35,12 +35,12 @@
   become: yes
   copy:
     src: artifact.tar.gz
-    dest: ~/
+    dest: /home/ubuntu/
 
 - name: "Extract tar file on ec2 instance"
   ansible.builtin.unarchive:
     src: artifact.tar.gz
-    dest: ~/
+    dest: /home/ubuntu/backend/
 
 #- name: "Extract zipped artifact file(s)"
 #  become: yes
