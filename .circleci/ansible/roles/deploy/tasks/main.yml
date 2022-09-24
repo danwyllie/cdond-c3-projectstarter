@@ -38,12 +38,12 @@
 
 - name: "copy artifact file to ec2 instance"
   copy:
-    src: /root/project/.circleci/artifact.tar.gz
+    src: /root/project/artifact.tar.gz
     dest: /home/ubuntu
 
 - name: "Extract tar file on ec2 instance"
   ansible.builtin.unarchive:
-    src: /home/ubuntu/artifact.tar.gz
+    src: artifact.tar.gz
     dest: /home/ubuntu/backend
 
 #- name: "Extract zipped artifact file(s)"
