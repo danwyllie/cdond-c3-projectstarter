@@ -288,6 +288,8 @@ jobs:
           fingerprints: ["fd:75:73:a0:05:11:38:84:9b:8c:25:c1:30:35:40:74"]
       - attach_workspace:
           at: .
+      - restore_cache:
+          keys: [backend-build]        
       - run:
           name: "Install dependencies - Ansible"
           command: |
