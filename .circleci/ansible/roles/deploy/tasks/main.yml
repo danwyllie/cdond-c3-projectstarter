@@ -59,4 +59,4 @@
   become: yes
   shell: |
     pm2 stop default
-    pm2 start npm -- start
+    pm2 start npm --name "backend" -- start
