@@ -187,14 +187,12 @@ jobs:
       #    name: "Install dependencies - AWSCLI"  
       #    command: |
       #      pip install awscli
-      - run:
-            name: "Install dependencies"
-            command: |
-              apk add --update npm aws-cli
+      #- run:
+      #      name: "Install dependencies"
+      #      command: |
+      #        apk add --update npm aws-cli
       - restore_cache:
           keys: [backend-build]
-      - attach_workspace:
-          at: .
       - run:
           name: "Run migrations"
           command: |
