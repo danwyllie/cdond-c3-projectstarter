@@ -309,14 +309,18 @@ jobs:
       - run:
           name: "Deploy backend"
           command: |
+            echo "== npm steps =="
             cd backend
             npm i
             npm run build
+            echo "== create artifact tar file =="
             cd ..
             pwd
+            ls -l
             tar -C backend -czf artifact.tar.gz .
             cp artifact.tar.gz .circleci
             ls .circleci -l
+            echo "== run ansible playbook =="
             cd .circleci/ansible
             echo "Contents of inventory.txt:"
             cat inventory.txt
