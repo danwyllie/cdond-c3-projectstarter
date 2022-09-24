@@ -177,20 +177,21 @@ jobs:
 
   run-migrations:
     docker:
-      - image: circleci/node:13.8.0
-      ##- image: python:3.11-rc-alpine
+      #- image: circleci/node:13.8.0
+      - image: python:3.11-rc-alpine
       #- image: cimg/node:16.13.1
     steps:
       - checkout
       # Adding AWSCLI because of failures running destroy environment
-      #- run:
-      #    name: "Install dependencies - AWSCLI"  
-      #    command: |
-      #      pip install awscli
-      #- run:
-      #      name: "Install dependencies"
-      #      command: |
-      #        apk add --update npm aws-cli
+      - run:
+          name: "Install dependencies"  
+          command: |
+            pip install awscli
+            pip install python
+#      - run:
+#          name: "Install dependencies"
+#          command: |
+#            apk add --update npm aws-cli
       - restore_cache:
           keys: [backend-build]
       - run:
@@ -198,9 +199,10 @@ jobs:
           command: |
             cd backend
             npm install
-            npm run build
-            npm audit fix
             npm run migrations > migrations_dump.txt
+      - run:
+          name: "Check migration and fix curl issue"
+          command: |
             grep "has been executed successfully" ~/project/backend/migrations_dump.txt
             echo "insecure" >> ~/.curlrc
       - run:
