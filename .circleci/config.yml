@@ -207,7 +207,7 @@ jobs:
           name: "Check migration and fix curl issue"
           command: |
             cd backend
-            grep "has been executed successfully" migrations_dump.txt
+            cat migrations_dump.txt | grep "has been executed successfully"
       - run:
           name: "Send migration result to kvdb"
           command: |
