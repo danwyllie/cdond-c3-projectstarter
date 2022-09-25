@@ -457,7 +457,7 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - run:
+#      - run:
 #          name: "Install dependencies - curl"
 #          command: |
 #            apk add --update curl
@@ -467,7 +467,7 @@ jobs:
             export LastworkflowID=$(aws cloudformation list-exports --region ${AWS_DEFAULT_REGION} --query "Exports[?Name==\`WorkflowID\`].Value" --output text --no-paginate)
             echo $LastworkflowID > LastworkflowID.txt
       - run:
-          name: Update cloudfront distribution
+          name: "Update cloudfront distribution"
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
