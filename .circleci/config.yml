@@ -27,22 +27,16 @@ commands:
     parameters:
       workflowid:
         type: string
-    steps:
-      - attach_workspace:
-          at: ~/
       - run:
           name: "Revert migrations"
           when: on_fail
           command: |
-            echo "Temp check of file contents:"
-            cat .circleci/ansible/migrationresults.txt
-            if grep -q 1 .circleci/ansible/migrationresults.txt; then
-                echo "Migration was successful, reverting the migration..."
-                cd ~/project/backend
-                npm install
-                npm run migration:revert
-            else
-                echo "Cannot validate migration."
+            SUCCESS=$(curl --insecure  https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/migration_<<parameters.workflowid>>)
+            if (( $SUCCESS == 1));
+            then
+              cd ~/project/backend
+              npm install
+              npm run migration:revert
             fi
 
 jobs:
@@ -301,6 +295,8 @@ jobs:
             fi
       - destroy-environment:
           workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
+          workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
 
   deploy-frontend:
     docker:
@@ -340,6 +336,8 @@ jobs:
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment:
+          workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
           workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
 
   deploy-backend:
@@ -389,6 +387,8 @@ jobs:
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment:
+          workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
           workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
 
   smoke-test:
