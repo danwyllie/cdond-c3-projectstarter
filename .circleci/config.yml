@@ -269,11 +269,6 @@ jobs:
             npm run migrations > ~/project/backend/migrations_dump.txt
             echo "== Checking migrations_dump file =="
             cat ~/project/backend/migrations_dump.txt
-            grep "has been executed successfully." ~/project/backend/migrations_dump.txt
-            echo "== Show path to dump txt =="
-            ls -d $(pwd -P)~/project/backend/migrations_dump.txt
-            pwd
-            ls -l
       - run:
           name: "Verify migration (can't get kvdb working)"
           command: |
