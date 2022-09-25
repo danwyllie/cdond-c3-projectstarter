@@ -526,7 +526,6 @@ jobs:
               aws cloudformation delete-stack --stack-name "udapeople-backend-${LastID}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${LastID}"
             else
-#              echo "==                                                             =="
               echo "No cleanup performed: AWS Cloudformation Stacks are still current"
             fi
 #            if [[ "${STACKS[@]}" =~ "${LastworkflowID}" ]]
