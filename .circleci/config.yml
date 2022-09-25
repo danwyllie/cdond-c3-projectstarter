@@ -28,7 +28,7 @@ commands:
         type: string
     steps:
       - attach_workspace:
-          at: .
+          at: ~/
       - run:
           name: "Revert migrations"
           when: on_fail
@@ -172,7 +172,7 @@ jobs:
             --output text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
       - persist_to_workspace:
-          root: .
+          root: ~/
           paths:
             - .circleci/ansible/inventory.txt
       - destroy-environment:
@@ -186,7 +186,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["fd:75:73:a0:05:11:38:84:9b:8c:25:c1:30:35:40:74"]
       - attach_workspace:
-          at: .
+          at: ~/
       - run:
           name: "Install ansible dependencies"
           command: |
@@ -245,6 +245,10 @@ jobs:
             cd backend
             npm install
             npm run migrations > migrations_dump.txt
+            echo "== Checking migrations_dump file =="
+            grep "executed successfully" migrations_dump.txt
+            pwd
+            ls -l
       - run:
           name: "Verify migration (can't get kvdb working)"
           command: |
@@ -257,7 +261,7 @@ jobs:
             cat .circleci/ansible/migrationresults.txt
             echo "==                                             =="
       - persist_to_workspace:
-          root: .
+          root: ~/
           paths:
             - .circleci/ansible/migrationresults.txt
 #      - persist_to_workspace:
@@ -327,7 +331,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["fd:75:73:a0:05:11:38:84:9b:8c:25:c1:30:35:40:74"]
       - attach_workspace:
-          at: .
+          at: ~/
       - restore_cache:
           keys: [backend-build]        
       - run:
