@@ -196,6 +196,18 @@ jobs:
       - run:
           name: "Configure server"
           command: |
+            echo "== Create required .env file =="
+            echo TYPEORM_CONNECTION=postgres >> "backend/.env"
+            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
+            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
+            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
+            echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
+            echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
+            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
+            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
+            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
+            echo "==                           =="
+            cat backend/.env
             cd .circleci/ansible
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
@@ -229,23 +241,23 @@ jobs:
 #          name: "Install dependencies"
 #          command: |
 #            apk add --update npm aws-cli
-      - run:
-          name: "Create .env file"
-          command: |
-            pwd
-            echo "== Create required .env file =="
-            echo TYPEORM_CONNECTION=postgres >> "backend/.env"
-            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
-            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
-            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
-            echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
-            echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
-            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
-            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
-            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
-            echo "==                           =="
-            cat backend/.env
-            ls /home/circleci/project/backend/
+#      - run:
+#          name: "Create .env file"
+#          command: |
+#            pwd
+#            echo "== Create required .env file =="
+#            echo TYPEORM_CONNECTION=postgres >> "backend/.env"
+#            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
+#            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
+#            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
+#            echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
+#            echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
+#            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
+#            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
+#            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
+#            echo "==                           =="
+#            cat backend/.env
+#            ls /home/circleci/project/backend/
 
       - run:
           name: "Run migrations"
@@ -254,11 +266,11 @@ jobs:
             echo "== Running install =="
             npm install
             echo "== Running migration =="
-            npm run migrations > /home/circleci/project/backend/migrations_dump.txt
+            npm run migrations > ~/project/backend/migrations_dump.txt
             echo "== Checking migrations_dump file =="
-            grep "has been executed successfully." /home/circleci/project/backend/migrations_dump.txt
+            grep "has been executed successfully." ~/project/backend/migrations_dump.txt
             echo "== Show path to dump txt =="
-            ls -d $(pwd -P)/home/circleci/project/backend/migrations_dump.txt
+            ls -d $(pwd -P)~/project/backend/migrations_dump.txt
             pwd
             ls -l
       - run:
