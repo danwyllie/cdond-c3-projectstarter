@@ -232,6 +232,7 @@ jobs:
       - run:
           name: "Create .env file"
           command: |
+            pwd
             echo "== Create required .env file =="
             echo TYPEORM_CONNECTION=postgres >> "backend/.env"
             echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
@@ -243,7 +244,7 @@ jobs:
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             echo "==                           =="
-            ls -d $(pwd -P).env
+            cat backend/.env
 
       - run:
           name: "Run migrations"
