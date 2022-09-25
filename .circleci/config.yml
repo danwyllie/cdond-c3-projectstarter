@@ -203,8 +203,8 @@ jobs:
 
   run-migrations:
     docker:
-      #- image: circleci/node:13.8.0
-      - image: python:3.11-rc-alpine
+      - image: circleci/node:13.8.0
+      #- image: python:3.11-rc-alpine
       #- image: cimg/node:16.13.1
     steps:
       - checkout
@@ -214,13 +214,16 @@ jobs:
       - run:
           name: "Install dependencies"  
           command: |
-            pip install awscli
-            apk update
-            apk upgrade
-            apk add nodejs
-            apk add npm
-            apk add --update curl
-            echo "insecure" >> ~/.curlrc
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip -q awscliv2.zip
+            sudo ./aws/install          
+#            pip install awscli
+#            apk update
+#            apk upgrade
+#            apk add nodejs
+#            apk add npm
+#            apk add --update curl
+#            echo "insecure" >> ~/.curlrc
 #      - run:
 #          name: "Install dependencies"
 #          command: |
