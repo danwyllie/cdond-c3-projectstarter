@@ -251,7 +251,7 @@ jobs:
             echo "== Running migration =="
             npm run migrations > migrations_dump.txt
             echo "== Checking migrations_dump file =="
-            grep "executed successfully" migrations_dump.txt
+            grep "has been executed successfully." migrations_dump.txt
             echo "== Show path to dump txt =="
             ls -d $(pwd -P)/migrations_dump.txt
             pwd
