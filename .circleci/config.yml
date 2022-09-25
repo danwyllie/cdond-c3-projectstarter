@@ -27,6 +27,7 @@ commands:
     parameters:
       workflowid:
         type: string
+    steps:
       - run:
           name: "Revert migrations"
           when: on_fail
