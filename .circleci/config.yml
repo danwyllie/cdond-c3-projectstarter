@@ -459,10 +459,10 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-#      - run:
-#          name: "Install dependencies - tar"
-#          command: |
-#            yum install -y tar gzip
+      - run:
+          name: "Install dependencies - tar"
+          command: |
+            yum install -y tar gzip
       - run:
           name: "Grab and export last workflow id"
           command: |
