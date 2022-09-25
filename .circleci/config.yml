@@ -241,24 +241,21 @@ jobs:
 #          name: "Install dependencies"
 #          command: |
 #            apk add --update npm aws-cli
-#      - run:
-#          name: "Create .env file"
-#          command: |
-#            pwd
-#            echo "== Create required .env file =="
-#            echo TYPEORM_CONNECTION=postgres >> "backend/.env"
-#            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
-#            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
-#            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
-#            echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
-#            echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
-#            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
-#            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
-#            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
-#            echo "==                           =="
-#            cat backend/.env
-#            ls /home/circleci/project/backend/
-
+      - run:
+          name: "Create .env file"
+          command: |
+            pwd
+            echo "== Create required .env file =="
+            echo TYPEORM_CONNECTION=postgres >> "backend/.env"
+            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
+            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
+            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
+            echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
+            echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
+            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
+            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
+            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
+            echo "==                           =="
       - run:
           name: "Run migrations"
           command: |
@@ -269,20 +266,20 @@ jobs:
             npm run migrations > ~/project/backend/migrations_dump.txt
             echo "== Checking migrations_dump file =="
             cat ~/project/backend/migrations_dump.txt
-      - run:
-          name: "Verify migration"
-          command: |
-            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
-            then
-              echo "Migration successful, saving results to file..."
-              echo "1" >> ~/project/migrationresults.txt
-            else
-              echo "No migration found, no action taken"
-            fi
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - project/migrationresults.txt
+#      - run:
+#          name: "Verify migration"
+#          command: |
+#            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
+#            then
+#              echo "Migration successful, saving results to file..."
+#              echo "1" >> ~/project/migrationresults.txt
+#            else
+#              echo "No migration found, no action taken"
+#            fi
+#      - persist_to_workspace:
+#          root: ~/
+#          paths:
+#            - project/migrationresults.txt
 #      - persist_to_workspace:
 #          root: ~/
 #          paths:
@@ -293,11 +290,14 @@ jobs:
 #            cd backend
 #            cat migrations_dump.txt | grep "has been executed successfully"
       - run:
-          name: "Send migration result to kvdb"
+          name: "Verify and send migration result to kvdb"
           command: |
-            if grep -q "has been executed successfully." ~/project/migrations_dump.txt
+            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
                 curl -k https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+            else
+                echo "No migration performed"
+                curl -k https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d 'No Migration'
             fi
       - destroy-environment:
           workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
