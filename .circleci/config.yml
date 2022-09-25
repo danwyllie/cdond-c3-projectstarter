@@ -217,6 +217,7 @@ jobs:
             apk upgrade
             apk add nodejs
             apk add npm
+            apk add --update curl
 #      - run:
 #          name: "Install dependencies"
 #          command: |
@@ -237,7 +238,9 @@ jobs:
               echo "Migration successful, saving results to file..."
               echo "1" >> .circleci/ansible/migrationresults.txt
             fi
+            echo "== Checking contents of migration results file =="
             cat .circleci/ansible/migrationresults.txt
+            echo "==                                             =="
       - persist_to_workspace:
           root: .
           paths:
@@ -251,13 +254,13 @@ jobs:
 #          command: |
 #            cd backend
 #            cat migrations_dump.txt | grep "has been executed successfully"
-#      - run:
-#          name: "Send migration result to kvdb"
-#          command: |
-#            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
-#            then
-#                curl --insecure https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
-#            fi
+      - run:
+          name: "Send migration result to kvdb"
+          command: |
+            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
+            then
+                curl --insecure https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+            fi
       - destroy-environment:
           workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
 
