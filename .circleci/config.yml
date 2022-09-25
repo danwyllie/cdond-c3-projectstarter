@@ -32,7 +32,7 @@ commands:
           name: "Revert migrations"
           when: on_fail
           command: |
-            SUCCESS=$(curl --insecure  https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/migration_<<parameters.workflowid>>)
+            SUCCESS=$(curl -k  https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/migration_<<parameters.workflowid>>)
             if (( $SUCCESS == 1));
             then
               cd ~/project/backend
@@ -444,7 +444,6 @@ jobs:
             echo ${URL} 
             if curl -s ${URL} | grep "Welcome"
             then
-                # Change this to 0 after the job fails
               return 0
             else
               return 1
@@ -466,8 +465,11 @@ jobs:
       - run:
           name: "Grab and export last workflow id"
           command: |
-            export LastworkflowID=$(aws cloudformation list-exports --region ${AWS_DEFAULT_REGION} --query "Exports[?Name==\`WorkflowID\`].Value" --output text --no-paginate)
-            echo $LastworkflowID > LastworkflowID.txt
+            export LastworkflowID=($(aws cloudformation list-exports --region ${AWS_DEFAULT_REGION} --query "Exports[?Name==\`WorkflowID\`].Value" --output text --no-paginate))
+            echo "== Showing workflowid to console =="
+            echo "$LastworkflowID"
+#            LASTWORKFLOWURL="https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/${CIRCLE_WORKFLOW_ID:0:7}"
+#            curl -k LASTWORKFLOWURL -d "${LastworkflowID}"
       - run:
           name: "Update cloudfront distribution"
           command: |
@@ -476,10 +478,10 @@ jobs:
               --stack-name InitialStack \
               --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - project/LastworkflowID.txt
+#      - persist_to_workspace:
+#          root: ~/
+#          paths:
+#            - project/LastworkflowID.txt
       - destroy-environment:
           workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations:
@@ -509,7 +511,7 @@ jobs:
       - run:
           name: "Verify stacks and cleanup if required"
           command: |
-            if [[ "${STACKS[@]}" =~ "${LastworkflowID}" ]]
+            if [[ "${CIRCLE_WORKFLOW_ID:0:7}" =~ "${LastworkflowID}" ]]
             then
               echo "== Cleanup required: Deleting AWS Cloudformation Stacks =="
               aws s3 rm "s3://udapeople-${LastworkflowID}" --recursive
@@ -519,6 +521,17 @@ jobs:
               echo "==                                                             =="
               echo "No cleanup performed: AWS Cloudformation Stacks are still current"
             fi
+#            if [[ "${STACKS[@]}" =~ "${LastworkflowID}" ]]
+#            then
+#              echo "== Cleanup required: Deleting AWS Cloudformation Stacks =="
+#              aws s3 rm "s3://udapeople-${LastworkflowID}" --recursive
+#              aws cloudformation delete-stack --stack-name "udapeople-backend-${LastworkflowID}"
+#              aws cloudformation delete-stack --stack-name "udapeople-frontend-${LastworkflowID}"
+#            else
+#              echo "==                                                             =="
+#              echo "No cleanup performed: AWS Cloudformation Stacks are still current"
+#            fi
+
 
 workflows:
   default:
