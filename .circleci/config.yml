@@ -208,6 +208,8 @@ jobs:
       #- image: cimg/node:16.13.1
     steps:
       - checkout
+      - restore_cache:
+          keys: [backend-build]
       # Adding AWSCLI because of failures running destroy environment
       - run:
           name: "Install dependencies"  
@@ -218,12 +220,25 @@ jobs:
             apk add nodejs
             apk add npm
             apk add --update curl
+            echo "insecure" >> ~/.curlrc
 #      - run:
 #          name: "Install dependencies"
 #          command: |
 #            apk add --update npm aws-cli
-      - restore_cache:
-          keys: [backend-build]
+      - run:
+          name: "Create .env file"
+          command: |
+            echo "== Create required .env file =="
+            echo TYPEORM_CONNECTION=postgres >> "backend/.env"
+            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
+            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
+            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
+            echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
+            echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
+            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
+            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
+            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
+            echo "==                           =="
       - run:
           name: "Run migrations"
           command: |
@@ -259,7 +274,7 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-                curl --insecure https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+                curl -k https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
       - destroy-environment:
           workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
@@ -334,16 +349,6 @@ jobs:
       - run:
           name: "Deploy backend"
           command: |
-            echo "== Create required .env file =="
-            echo TYPEORM_CONNECTION=postgres >> "backend/.env"
-            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
-            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
-            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
-            echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
-            echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
-            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
-            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
-            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             echo "== npm steps =="
             cd backend
             npm i
