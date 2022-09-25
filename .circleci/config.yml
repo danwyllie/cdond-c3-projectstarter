@@ -16,6 +16,7 @@ commands:
           command: |
             aws s3 rm "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflowid>> --region ${AWS_DEFAULT_REGION}
+            aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflowid>> --region ${AWS_DEFAULT_REGION}
 # Disabling auto delete of ec2 server to help troubleshooting
 #            aws s3 rm "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
 #            aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflowid>> --region ${AWS_DEFAULT_REGION}
@@ -242,7 +243,7 @@ jobs:
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             echo "==                           =="
-            ls -d $(pwd -P)backend/.env
+            ls -d $(pwd -P).env
 
       - run:
           name: "Run migrations"
