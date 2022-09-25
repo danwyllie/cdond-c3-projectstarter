@@ -249,17 +249,17 @@ jobs:
             echo "== Running install =="
             npm install
             echo "== Running migration =="
-            npm run migrations > migrations_dump.txt
+            npm run migrations > project/migrations_dump.txt
             echo "== Checking migrations_dump file =="
-            grep "has been executed successfully." migrations_dump.txt
+            grep "has been executed successfully." project/migrations_dump.txt
             echo "== Show path to dump txt =="
-            ls -d $(pwd -P)/migrations_dump.txt
+            ls -d $(pwd -P)project/migrations_dump.txt
             pwd
             ls -l
       - run:
           name: "Verify migration (can't get kvdb working)"
           command: |
-            if grep -q "has been executed successfully." project/backend/migrations_dump.txt
+            if grep -q "has been executed successfully." project/migrations_dump.txt
             then
               echo "Migration successful, saving results to file..."
               echo "1" >> project/migrationresults.txt
@@ -283,7 +283,7 @@ jobs:
       - run:
           name: "Send migration result to kvdb"
           command: |
-            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
+            if grep -q "has been executed successfully." ~/project/migrations_dump.txt
             then
                 curl -k https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
