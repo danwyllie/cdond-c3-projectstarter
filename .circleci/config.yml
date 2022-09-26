@@ -476,7 +476,6 @@ jobs:
 #            export LastID="${LastworkflowID: -7}"
 #            echo "$LastID"
 #            echo "$LastID" > LastworkflowID.txt
-
       - run:
           name: "Update cloudfront distribution"
           command: |
