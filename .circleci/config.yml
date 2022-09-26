@@ -522,7 +522,7 @@ jobs:
             if [[ "${STACKS[@]}" =~ "${LastworkflowID}"  ]]
             then
               echo "== Cleanup required: Deleting AWS Cloudformation Stacks =="
-              aws s3 rm "s3://udapeople-${$LastID}" --recursive
+              aws s3 rm "s3://udapeople-${LastID}" --recursive
               aws cloudformation delete-stack --stack-name "udapeople-backend-${LastID}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${LastID}"
             else
