@@ -36,7 +36,7 @@ commands:
             SUCCESS=$(curl -k  https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/migration_<<parameters.workflowid>>)
             if (( $SUCCESS == 1));
             then
-              cd ~/project/backend
+              cd backend
               npm install
               npm run migration:revert
             else
@@ -244,7 +244,8 @@ jobs:
             echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
-            echo "==                           =="
+            echo "== Try to cat .env file =="
+            cat backend/.env
       - run:
           name: "Run migrations"
           command: |
@@ -252,13 +253,13 @@ jobs:
             echo "== Running install =="
             npm install
             echo "== Running migration =="
-            npm run migrations > ~/project/backend/migrations_dump.txt
+            npm run migrations > migrations_dump.txt
             echo "== Checking migrations_dump file =="
-            cat ~/project/backend/migrations_dump.txt
+            cat migrations_dump.txt
       - run:
           name: "Verify and send migration result to kvdb"
           command: |
-            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
+            if grep -q "has been executed successfully." migrations_dump.txt
             then
                 curl -k https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             else
