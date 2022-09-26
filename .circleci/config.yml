@@ -471,8 +471,7 @@ jobs:
             echo "== Showing workflowid to console =="
             echo "$LastworkflowID"
             echo "$LastworkflowID" > LastworkflowID.txt
-            LASTWORKFLOWURL="https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/lastworkflow_${CIRCLE_WORKFLOW_ID:0:7}"
-            curl -k LASTWORKFLOWURL -d "${LastworkflowID}"
+            curl -k https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/lastworkflow_${CIRCLE_WORKFLOW_ID:0:7} -d "${LastworkflowID}"
 #            export LastID="${LastworkflowID: -7}"
 #            echo "$LastID"
 #            echo "$LastID" > LastworkflowID.txt
@@ -518,8 +517,7 @@ jobs:
             echo "== Show lastworkflow id to console =="
             echo $LastworkflowID
             echo "== Show lastworkflow id code =="
-            LASTWORKFLOWURL="https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/lastworkflow_${CIRCLE_WORKFLOW_ID:0:7}"
-            export LastID=$(curl -k LASTWORKFLOWURL)
+            export LastID=$(curl -k https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/lastworkflow_${CIRCLE_WORKFLOW_ID:0:7})
             echo "$LastID"
             echo "== Show current cloudformation stacks =="
             printf '%s\n' "${STACKS[@]}"
