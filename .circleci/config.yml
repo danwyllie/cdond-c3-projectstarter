@@ -14,6 +14,11 @@ commands:
           name: "Destroy environments"
           when: << parameters.when_to_run >>
           command: |
+            echo "== Sanity check to confirm variables used =="
+            echo aws s3 rm "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
+            echo aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflowid>> --region ${AWS_DEFAULT_REGION}
+            echo aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflowid>> --region ${AWS_DEFAULT_REGION}
+            echo "== Running aws commands to destroy environments =="
             aws s3 rm "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflowid>> --region ${AWS_DEFAULT_REGION}
             aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflowid>> --region ${AWS_DEFAULT_REGION}
@@ -393,7 +398,7 @@ jobs:
             echo "Testing ${API_URL}/api/status..."
             if curl "${API_URL}/api/status" | grep "ok"
             then
-                return 0
+                return 1
             else
                 return 1
             fi
