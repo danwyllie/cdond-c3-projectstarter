@@ -518,17 +518,19 @@ jobs:
       - run:
           name: "Verify stacks and cleanup if required"
           command: |
-            echo "== Show lastworkflow id code =="
+            echo "== Grabbing lastworkflow id =="
             export LastworkflowID=$(curl -k https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/lastworkflow_${CIRCLE_WORKFLOW_ID:0:7})
-            echo "$LastworkflowID"
+            echo "Lastworkflow =" "$LastworkflowID"
             export LastID="${LastworkflowID: -7}"
-            echo "$LastID"
+            echo "LastID =" "$LastID"
             echo "== Show current cloudformation stacks =="
             printf '%s\n' "${STACKS[@]}"
             if [[ "${STACKS[@]}" =~ "${LastworkflowID}"  ]]
             then
               echo "== Cleanup required: Deleting AWS Cloudformation Stacks =="
-              aws s3 rm "s3://udapeople-${LastID}" --recursive
+              echo "Lastworkflow =" "$LastworkflowID"
+              echo "LastID =" "$LastID"
+              aws s3 rm "s3://${LastworkflowID}" --recursive
               aws cloudformation delete-stack --stack-name "udapeople-backend-${LastID}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${LastID}"
             else
