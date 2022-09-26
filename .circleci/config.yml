@@ -253,7 +253,7 @@ jobs:
             echo "== Running install =="
             npm install
             echo "== Running migration =="
-            npm run migrations > migrations_dump.txt
+            npm run migrations >> migrations_dump.txt
             echo "== Checking migrations_dump file =="
             cat migrations_dump.txt
       - run:
