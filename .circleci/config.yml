@@ -518,13 +518,13 @@ jobs:
               echo "Lastworkflow =" "$LastworkflowID"
               echo "LastID =" "$LastID"
               echo "Running the following commands:"
-              echo aws s3 rm "s3://udapeople-${LastworkflowID}" --recursive
-              echo aws cloudformation delete-stack --stack-name "udapeople-backend-${LastworkflowID}"
-              echo aws cloudformation delete-stack --stack-name "udapeople-frontend-${LastworkflowID}"
+              echo aws s3 rm "s3://udapeople-${LastID}" --recursive
+              echo aws cloudformation delete-stack --stack-name "udapeople-backend-${LastID}"
+              echo aws cloudformation delete-stack --stack-name "udapeople-frontend-${LastID}"
 
-              aws s3 rm "s3://udapeople-${LastworkflowID}" --recursive
-              aws cloudformation delete-stack --stack-name "udapeople-backend-${LastworkflowID}"
-              aws cloudformation delete-stack --stack-name "udapeople-frontend-${LastworkflowID}"
+              aws s3 rm "s3://udapeople-${LastID}" --recursive
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${LastID}"
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${LastID}"
             else
               echo "No cleanup performed: AWS Cloudformation Stacks are still current"
             fi
