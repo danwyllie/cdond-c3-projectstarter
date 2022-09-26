@@ -169,8 +169,8 @@ jobs:
           name: "Append ip to ansible inventory file"
           command: |
             aws ec2 describe-instances \
-            --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --filters "Name=tag:project,Values=udapeople" \
+            --query 'Reservations[*].Instances[*].PublicDnsName' \
+            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
             --output text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
       - persist_to_workspace:
@@ -468,9 +468,10 @@ jobs:
             export LastworkflowID=($(aws cloudformation list-exports --region ${AWS_DEFAULT_REGION} --query "Exports[?Name==\`WorkflowID\`].Value" --output text --no-paginate))
             echo "== Showing workflowid to console =="
             echo "$LastworkflowID"
-            export LastID="${LastworkflowID: -7}"
-            echo "$LastID"
-            echo "$LastID" > LastworkflowID.txt
+            echo "$LastworkflowID" > LastworkflowID.txt
+#            export LastID="${LastworkflowID: -7}"
+#            echo "$LastID"
+#            echo "$LastID" > LastworkflowID.txt
 #            LASTWORKFLOWURL="https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/${CIRCLE_WORKFLOW_ID:0:7}"
 #            curl -k LASTWORKFLOWURL -d "${LastworkflowID}"
       - run:
@@ -505,20 +506,20 @@ jobs:
           name: "Grab last workflowid"
           command: |
             export LastworkflowID=($(aws cloudformation list-exports --region ${AWS_DEFAULT_REGION} --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text))
+      - run:
+          name: "Grab current cloudformation stacks"
+          command: |
+            export STACKS=($(aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE --query "StackSummaries[*].StackName" --no-paginate --output text))
+      - run:
+          name: "Verify stacks and cleanup if required"
+          command: |
             echo "== Show lastworkflow id to console =="
             echo $LastworkflowID
             LastID=$(<LastworkflowID.txt)
             echo "== Show lastworkflow id code =="
             echo "$LastID"
-      - run:
-          name: "Grab current cloudformation stacks"
-          command: |
-            export STACKS=($(aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE --query "StackSummaries[*].StackName" --no-paginate --output text))
             echo "== Show current cloudformation stacks =="
             printf '%s\n' "${STACKS[@]}"
-      - run:
-          name: "Verify stacks and cleanup if required"
-          command: |
             if [[ "${STACKS[@]}" =~ "${LastworkflowID}"  ]]
             then
               echo "== Cleanup required: Deleting AWS Cloudformation Stacks =="
