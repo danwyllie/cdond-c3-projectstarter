@@ -469,7 +469,7 @@ jobs:
             echo "== Showing workflowid to console =="
             echo "$LastworkflowID"
             export LastID="${LastworkflowID: -7}"
-            echo $LastID
+            echo "$LastID"
             echo "$LastID" > LastworkflowID.txt
 #            LASTWORKFLOWURL="https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/${CIRCLE_WORKFLOW_ID:0:7}"
 #            curl -k LASTWORKFLOWURL -d "${LastworkflowID}"
@@ -519,10 +519,10 @@ jobs:
       - run:
           name: "Verify stacks and cleanup if required"
           command: |
-            if [[ "${STACKS[@]}" =~ "${LastID}"  ]]
+            if [[ "${STACKS[@]}" =~ "${LastworkflowID}"  ]]
             then
               echo "== Cleanup required: Deleting AWS Cloudformation Stacks =="
-              aws s3 rm "s3://udapeople-${LastID}" --recursive
+              aws s3 rm "s3://udapeople-${$LastID}" --recursive
               aws cloudformation delete-stack --stack-name "udapeople-backend-${LastID}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${LastID}"
             else
