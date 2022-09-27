@@ -2,5 +2,5 @@
 https://github.com/danwyllie/cdond-c3-projectstarter
 
 2. S3 Bucket & front-end:
-http://udapeople-2b48e3c.s3-website-us-east-1.amazonaws.com
-https://daa5z57e1immw.cloudfront.net
+http://udapeople-3f48944.s3-website-us-east-1.amazonaws.com/
+https://daa5z57e1immw.cloudfront.net/

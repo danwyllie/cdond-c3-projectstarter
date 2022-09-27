@@ -253,7 +253,7 @@ jobs:
             echo "== Running install =="
             npm install
             echo "== Running migration =="
-            npm run migrations >> migrations_dump.txt
+            npm run migrations > migrations_dump.txt
             echo "== Checking migrations_dump file =="
             cat migrations_dump.txt
       - run:
@@ -265,7 +265,6 @@ jobs:
             else
                 echo "No migration performed"
             fi
-#                curl -k https://kvdb.io/92NGEye9MJm1giTJk2FtfJ/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d 'No Migration'
       - destroy-environment:
           workflowid: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations:
